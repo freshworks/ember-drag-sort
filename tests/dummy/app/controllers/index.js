@@ -121,6 +121,59 @@ export default Controller.extend({
     ])
   ),
 
+  items15 : computed(() =>
+    A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Zomg'},
+      {name : 'Lol'},
+      {name : 'Quuz'},
+      {name : 'Hello'},
+      {name : 'World'},
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Lol'},
+      {name : 'Quuz'},
+      {name : 'Hello'},
+      {name : 'World'},
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Zomg'},
+      {name : 'Lol'},
+      {name : 'Quuz'},
+      {name : 'Hello'},
+      {name : 'World'},
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Zomg'},
+      {name : 'Lol'},
+      {name : 'Quuz'},
+      {name : 'Hello'},
+      {name : 'World'},
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Zomg'},
+    ])
+  ),
+
+  items16 : computed(() =>
+    A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+    ])
+  ),
+
   nestedItem : computed(() => (
     {
       name     : 'Foo',
@@ -179,9 +232,25 @@ export default Controller.extend({
     }
   )),
 
+  itemsThreshold : 10,
+
   networkFailure : false,
 
   actions : {
+    appendItems () {
+      this.get('items16').pushObjects(A([
+        {name : 'Foo'},
+        {name : 'Bar'},
+        {name : 'Baz'},
+        {name : 'Quux'},
+        {name : 'Zomg'},
+      ]))
+    },
+
+    removeItems () {
+      this.get('items16').removeAt(0, 5)
+    },
+
     dragEnd ({sourceList, sourceIndex, targetList, targetIndex}) {
       if (sourceList === targetList && sourceIndex === targetIndex) return
 

@@ -1,19 +1,25 @@
-{{#each items as |item index|}}
-  {{#drag-sort-item
-    additionalArgs                 = additionalArgs
-    item                           = item
-    index                          = index
-    items                          = items
-    group                          = group
-    handle                         = handle
-    class                          = childClass
-    tagName                        = childTagName
-    isHorizontal                   = isHorizontal
-    isRtl                          = isRtl
-    draggingEnabled                = draggingEnabled
-    dragEndAction                  = dragEndAction
-    determineForeignPositionAction = determineForeignPositionAction
-  }}
-    {{yield item index}}
-  {{/drag-sort-item}}
-{{/each}}
+{{#vertical-collection items
+    estimateHeight=estimateItemHeight
+    staticHeight=staticHeight
+    renderAll=renderAll as |item index|
+}}
+  <div>
+    {{#drag-sort-item
+      additionalArgs                 = additionalArgs
+      item                           = item
+      index                          = index
+      items                          = items
+      group                          = group
+      handle                         = handle
+      class                          = childClass
+      tagName                        = childTagName
+      isHorizontal                   = isHorizontal
+      isRtl                          = isRtl
+      draggingEnabled                = draggingEnabled
+      dragEndAction                  = dragEndAction
+      determineForeignPositionAction = determineForeignPositionAction
+    }}
+      {{yield item index}}
+    {{/drag-sort-item}}
+  </div>
+{{/vertical-collection}}

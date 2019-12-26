@@ -16,21 +16,23 @@ import layout from '../templates/components/drag-sort-list'
 export default Component.extend({
 
   // ----- Arguments -----
-  additionalArgs  : undefined,
-  items           : undefined,
-  group           : undefined,
-  draggingEnabled : true,
-  childClass      : '',
-  childTagName    : 'div',
-  handle          : null,
+  additionalArgs     : undefined,
+  items              : undefined,
+  group              : undefined,
+  draggingEnabled    : true,
+  childClass         : '',
+  childTagName       : 'div',
+  handle             : null,
+  estimateItemHeight : 50,
 
-  isHorizontal : false,
-  isRtl        : false,
+  isHorizontal      : false,
+  isRtl             : false,
+  staticHeight      : false,
+  lazyRenderEnabled : false,
 
   dragEndAction                  : undefined,
   determineForeignPositionAction : undefined,
-
-
+  itemsThreshold                 : undefined,
 
   // ----- Services -----
   dragSort : service(),
@@ -49,6 +51,7 @@ export default Component.extend({
     'isDraggingOver:-isDraggingOver',
     'isExpanded2:-isExpanded',
     'isEmpty:-isEmpty',
+    'isLazyRenderActive:-isLazyRenderActive',
   ],
 
 
@@ -64,9 +67,24 @@ export default Component.extend({
   draggedItem         : reads('dragSort.draggedItem'),
   lastDragEnteredList : reads('dragSort.lastDragEnteredList'),
   isVertical          : not('isHorizontal'),
-
+  renderAll           : not('isLazyRenderActive'),
 
   // ----- Computed properties -----
+  isLazyRenderActive : computed('lazyRenderEnabled', 'itemsThreshold', 'isVertical', 'items.length', function () {
+    let {
+      lazyRenderEnabled,
+      itemsThreshold,
+      isVertical,
+      'items.length': itemCount,
+    } = this.getProperties('lazyRenderEnabled', 'itemsThreshold', 'isVertical', 'items.length')
+
+    itemsThreshold = parseInt(itemsThreshold)
+
+    return isNaN(itemsThreshold)
+      ? lazyRenderEnabled && isVertical
+      : lazyRenderEnabled && isVertical && itemCount > itemsThreshold
+  }).readOnly(),
+
   isDragging : computed('dragSort.{isDragging,group}', 'group', function () {
     const isDragging       = this.get('dragSort.isDragging')
     const group            = this.get('group')

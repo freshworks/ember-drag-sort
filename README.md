@@ -8,44 +8,45 @@
 ![node-versions 8+](https://img.shields.io/badge/node--versions-8%2B-yellowgreen.svg)
 ![ember-cli 3.8.1](https://img.shields.io/badge/uses%20ember--cli-3.8.1-blue.svg)
 
-- [ember-drag-sort](#ember-drag-sort)
-  - [Support](#support)
-  - [About](#about)
-    - [Features](#features)
-    - [Demo](#demo)
-  - [Versions, branches and jQuery](#versions-branches-and-jquery)
-  - [Known issues](#known-issues)
-    - [Browser support](#browser-support)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Basic usage](#basic-usage)
-    - [The drag end action](#the-drag-end-action)
-    - [The determine foreign position action](#the-determine-foreign-position-action)
-    - [Passing additional arguments](#passing-additional-arguments)
-    - [drag-sort-list arguments reference](#drag-sort-list-arguments-reference)
-    - [HTML classes](#html-classes)
-    - [CSS concerns](#css-concerns)
-    - [Events](#events)
-  - [Test helpers](#test-helpers)
-    - [trigger](#trigger)
-    - [sort](#sort)
-    - [move](#move)
-    - [Page object components](#page-object-components)
-      - [Importing page object components](#importing-page-object-components)
-      - [Including page object components into your page objects](#including-page-object-components-into-your-page-objects)
-      - [Extending the dragSortList page object component](#extending-the-dragsortlist-page-object-component)
-      - [Extending the dragSortItem page object component](#extending-the-dragsortitem-page-object-component)
-      - [Providing the drag handle selector](#providing-the-drag-handle-selector)
-      - [Sorting the dragSortList page object component](#sorting-the-dragsortlist-page-object-component)
-  - [Development](#development)
-    - [Do not use npm, use yarn](#do-not-use-npm-use-yarn)
-    - [Installation for development](#installation-for-development)
-    - [Running](#running)
-    - [Branch names](#branch-names)
-    - [Updating the table of contents](#updating-the-table-of-contents)
-    - [Demo deployment](#demo-deployment)
-  - [Credits](#credits)
-  - [License](#license)
+* [ember-drag-sort](#ember-drag-sort)
+  * [Support](#support)
+  * [About](#about)
+    * [Features](#features)
+    * [Demo](#demo)
+  * [Versions, branches and jQuery](#versions-branches-and-jquery)
+  * [Known issues](#known-issues)
+    * [Browser support](#browser-support)
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [Basic usage](#basic-usage)
+    * [The drag end action](#the-drag-end-action)
+    * [Occlussion Renderer Usage](#occlussion-renderer-usage)
+    * [The determine foreign position action](#the-determine-foreign-position-action)
+    * [Passing additional arguments](#passing-additional-arguments)
+    * [drag-sort-list arguments reference](#drag-sort-list-arguments-reference)
+    * [HTML classes](#html-classes)
+    * [CSS concerns](#css-concerns)
+    * [Events](#events)
+  * [Test helpers](#test-helpers)
+    * [trigger](#trigger)
+    * [sort](#sort)
+    * [move](#move)
+    * [Page object components](#page-object-components)
+      * [Importing page object components](#importing-page-object-components)
+      * [Including page object components into your page objects](#including-page-object-components-into-your-page-objects)
+      * [Extending the dragSortList page object component](#extending-the-dragsortlist-page-object-component)
+      * [Extending the dragSortItem page object component](#extending-the-dragsortitem-page-object-component)
+      * [Providing the drag handle selector](#providing-the-drag-handle-selector)
+      * [Sorting the dragSortList page object component](#sorting-the-dragsortlist-page-object-component)
+  * [Development](#development)
+    * [Do not use npm, use yarn](#do-not-use-npm-use-yarn)
+    * [Installation for development](#installation-for-development)
+    * [Running](#running)
+    * [Branch names](#branch-names)
+    * [Updating the table of contents](#updating-the-table-of-contents)
+    * [Demo deployment](#demo-deployment)
+  * [Credits](#credits)
+  * [License](#license)
 
 
 
@@ -210,7 +211,32 @@ Incorrect:
 
     dragEndAction = 'dragEnd'
 
+### Occlussion Renderer Usage
 
+Drag-Sort-List is extended by [@html-next/vertical-collection](https://github.com/html-next/vertical-collection) add-on. Following are the minimal properties are exposed to drag-sort-list:
+
+| Property      | Type   | Description                                                            |
+|:--------------|:-------|:-----------------------------------------------------------------------|
+| `lazyRenderEnabled` | Boolean  | set `true` to activate.                    |
+| `estimateItemHeight`| Number   | Optional - Estimated height of item.       |
+| `itemsThreshold`    | Number   | Optional.                                  |
+| `staticHeight`      | Boolean  | Optional.                                  |
+
+Occlusion renderer can be used for a huge list of items to improve the perfomance. It is currently supported for the `vertical` type of lists. Thresholds property can be used to enable occlusion renderer on demand based on the count of items.
+
+```handlebars
+{{#drag-sort-list
+  items             = items15
+  lazyRenderEnabled = true
+  itemsThreshold    = 30
+  class             = "height--400"
+  as |item|
+}}
+  <div>
+    {{item.name}}
+  </div>
+{{/drag-sort-list}}
+```
 
 ### The determine foreign position action
 
@@ -332,8 +358,10 @@ dragEndAction({ sourceList, sourceIndex, sourceArgs, targetList, targetIndex, ta
 | `isHorizontal`                   | Boolean                                      | `false`       | Displays the list horizontally. :warning: Horizontal lists don't work well when nested.                                                                                                         |
 | `isRtl`                          | Boolean                                      | `false`       | RTL - Right to left. Might be useful for certain languages. :warning: Has no effect on vertical lists.                                                                                          |
 | `additionalArgs`                 | <any>                                        | `undefined`   | A catch-all for additional arguments you may want to access in the `dragEndAction`. Can be used for things like passing the parent of the list in for saving `hasMany` relationships.           |
-
-
+| `estimateItemHeight`             | Number                                       | `50`          | Estimated height of each item to be rendered. Use the best guess as occlusion renderer will use this to determine how many items are to be displayed virtually, before and after the vertical-collection viewport.                                                   |
+| `staticHeight`                   | Boolean                                      | `false`       | Indicates if the occluded items' heights will change or not. If true, the vertical-collection will assume that items' heights are always equal to `estimateHeight` this is more performant, but less flexible.                                                              |
+| `lazyRenderEnabled`              | Boolean                                      | `false`       | Occlusion renderer will be enabled for the `vertical` type items. It improves the performance by displaying only a part of list items based on the container height. Requires a `fixed height` for the container, and a vertical scroll-bar will appear                |
+| `itemsThreshold`                 | Number                                       | `undefined`   | Occlusion renderer will be activated only when the given threshold is exceeded by the number of items. It requires `lazyRenderEnabled` option to be `true`.                                        |
 
 ### HTML classes
 
@@ -341,11 +369,12 @@ dragEndAction({ sourceList, sourceIndex, sourceArgs, targetList, targetIndex, ta
 
 | HTML class         | Applied when...                                                                                                                                                                   |
 |:-------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `-isEmpty`         | The given list is empty.                                                                                                                                                          |
-| `-draggingEnabled` | Dragging is enabled via the `draggingEnabled` attribute.                                                                                                                          |
-| `-isDragging`      | Dragging is in progress and the given list is either a source list or belongs to the same group as the source list.                                                               |
-| `-isDraggingOver`  | Dragging is in progress and the placeholder is within the given list. This class is removed from a list when an item is dragged into a different list.                            |
-| `-isExpanded`      | Dragging is in progress and the given list is either empty or contains only the dragged item. Used to give some height to the list, so that the item can be dragged back into it. |
+| `-isEmpty`            | The given list is empty.                                                                                                                                                          |
+| `-draggingEnabled`    | Dragging is enabled via the `draggingEnabled` attribute.                                                                                                                          |
+| `-isDragging`         | Dragging is in progress and the given list is either a source list or belongs to the same group as the source list.                                                               |
+| `-isDraggingOver`     | Dragging is in progress and the placeholder is within the given list. This class is removed from a list when an item is dragged into a different list.                            |
+| `-isExpanded`         | Dragging is in progress and the given list is either empty or contains only the dragged item. Used to give some height to the list, so that the item can be dragged back into it. |
+| `-isLazyRenderActive` | Occulsion renderer is enabled and active. |
 
 The individual item component has HTML class `dragSortItem`. It also assumes the following classes dynamically:
 
