@@ -235,6 +235,7 @@ export default Controller.extend({
   itemsThreshold : 10,
 
   networkFailure : false,
+  autoScroll     : true,
 
   actions : {
     appendItems () {

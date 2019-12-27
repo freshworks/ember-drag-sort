@@ -10,25 +10,26 @@ import { A } from '@ember/array'
 
 // ----- Own modules -----
 import layout from '../templates/components/drag-sort-list'
+import defaultOcclusionOptions from '../constants/occlusion-options'
 
 
 
-export default Component.extend({
+export default Component.extend(defaultOcclusionOptions, {
 
   // ----- Arguments -----
-  additionalArgs     : undefined,
-  items              : undefined,
-  group              : undefined,
-  draggingEnabled    : true,
-  childClass         : '',
-  childTagName       : 'div',
-  handle             : null,
-  estimateItemHeight : 50,
+  additionalArgs  : undefined,
+  items           : undefined,
+  group           : undefined,
+  draggingEnabled : true,
+  childClass      : '',
+  childTagName    : 'div',
+  handle          : null,
 
   isHorizontal      : false,
   isRtl             : false,
   staticHeight      : false,
   lazyRenderEnabled : false,
+  autoScroll        : false,
 
   dragEndAction                  : undefined,
   determineForeignPositionAction : undefined,
@@ -129,8 +130,6 @@ export default Component.extend({
       && !sourceIndex
     )
   }),
-
-
 
   // ----- Overridden methods -----
   dragEnter (event) {
@@ -253,6 +252,15 @@ export default Component.extend({
       if (this.get('isDestroying') || this.get('isDestroyed')) return
 
       this.set('isExpanded2', this.get('isExpanded'))
+    })
+  }),
+
+  scrollToBottom : observer('items.length', 'autoScroll', function () {
+    // The delay is necessary to prevent scrollHeight computation before DOM update
+    next(() => {
+      if (this.get('autoScroll')) {
+        this.element.scrollTop = this.element.scrollHeight
+      }
     })
   }),
 })

@@ -218,17 +218,22 @@ Drag-Sort-List is extended by [@html-next/vertical-collection](https://github.co
 | Property      | Type   | Description                                                            |
 |:--------------|:-------|:-----------------------------------------------------------------------|
 | `lazyRenderEnabled` | Boolean  | set `true` to activate.                    |
-| `estimateItemHeight`| Number   | Optional - Estimated height of item.       |
+| `estimateHeight`    | Number   | Optional - Estimated height of item.       |
 | `itemsThreshold`    | Number   | Optional.                                  |
-| `staticHeight`      | Boolean  | Optional.                                  |
+| `autoScroll`        | Boolean  | Optional - default is `false`.             |
 
 Occlusion renderer can be used for a huge list of items to improve the perfomance. It is currently supported for the `vertical` type of lists. Thresholds property can be used to enable occlusion renderer on demand based on the count of items.
+
+> **`Note:`**
+> - Refer [@html-next/vertical-collection](https://github.com/html-next/vertical-collection) for more information on the occlusion vertical-collection properties.
+> - `containerSelector` property from vertical-collection is not applicable as drag-sort-list will be the default container for the items. This allows flexibility to set class directly on the container *(for ex: setting height for occlusion renderer to effectively work with scroll)*
 
 ```handlebars
 {{#drag-sort-list
   items             = items15
   lazyRenderEnabled = true
   itemsThreshold    = 30
+  autoScroll        = true
   class             = "height--400"
   as |item|
 }}
@@ -358,8 +363,8 @@ dragEndAction({ sourceList, sourceIndex, sourceArgs, targetList, targetIndex, ta
 | `isHorizontal`                   | Boolean                                      | `false`       | Displays the list horizontally. :warning: Horizontal lists don't work well when nested.                                                                                                         |
 | `isRtl`                          | Boolean                                      | `false`       | RTL - Right to left. Might be useful for certain languages. :warning: Has no effect on vertical lists.                                                                                          |
 | `additionalArgs`                 | <any>                                        | `undefined`   | A catch-all for additional arguments you may want to access in the `dragEndAction`. Can be used for things like passing the parent of the list in for saving `hasMany` relationships.           |
-| `estimateItemHeight`             | Number                                       | `50`          | Estimated height of each item to be rendered. Use the best guess as occlusion renderer will use this to determine how many items are to be displayed virtually, before and after the vertical-collection viewport.                                                   |
-| `staticHeight`                   | Boolean                                      | `false`       | Indicates if the occluded items' heights will change or not. If true, the vertical-collection will assume that items' heights are always equal to `estimateHeight` this is more performant, but less flexible.                                                              |
+| `estimateHeight`                 | Number                                       | `50`          | Estimated height of each item to be rendered. Use the best guess as occlusion renderer will use this to determine how many items are to be displayed virtually, before and after the vertical-collection viewport.                                                   |
+| `autoScroll`                     | Boolean                                      | `false`       | Enabling this option will auto scroll to the bottom of the list everytime when the items' size changes.                                        |
 | `lazyRenderEnabled`              | Boolean                                      | `false`       | Occlusion renderer will be enabled for the `vertical` type items. It improves the performance by displaying only a part of list items based on the container height. Requires a `fixed height` for the container, and a vertical scroll-bar will appear                |
 | `itemsThreshold`                 | Number                                       | `undefined`   | Occlusion renderer will be activated only when the given threshold is exceeded by the number of items. It requires `lazyRenderEnabled` option to be `true`.                                        |
 

@@ -405,17 +405,17 @@
 
       <article class="list">
         <h4>List with Occlusion Rendering </h4>
-        {{#drag-sort-list
-          items             = items15
-          dragEndAction     = (action 'dragEnd')
-          lazyRenderEnabled = true
-          class             = "height--400"
-          as |item|
-        }}
-          <div class="the-item">
-            {{item.name}}
-          </div>
-        {{/drag-sort-list}}
+          {{#drag-sort-list
+            items             = items15
+            dragEndAction     = (action 'dragEnd')
+            lazyRenderEnabled = true
+            class             = "height--400"
+            as |item|
+          }}
+            <div class="the-item">
+              {{item.name}}
+            </div>
+          {{/drag-sort-list}}
       </article>
 
       <article class="list occlusion">
@@ -432,6 +432,12 @@
             <button name="button" class="padding--8" {{action 'appendItems'}}>Add 5 Items</button>
             <button name="button" class="padding--8" {{action 'removeItems'}}>Remove 5 Items</button>
           </div>
+          <div>
+            <label for="autoscroll">
+              Enable Auto Scroll:
+            </label>
+            {{input type="checkbox" checked=autoScroll}} 
+          </div>
         </div>
 
         <p class="info">Occlusion will be activated when number of items exceed the above threshold value</p>
@@ -440,8 +446,9 @@
           items               = items16
           dragEndAction       = (action 'dragEnd')
           lazyRenderEnabled   = true
+          autoScroll          = autoScroll
           itemsThreshold      = itemsThreshold
-          estimateItemHeight  = 35
+          estimateHeight      = 35
           class               = "height--400"
           as |item|
         }}
