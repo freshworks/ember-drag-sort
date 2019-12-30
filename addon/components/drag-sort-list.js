@@ -29,7 +29,6 @@ export default Component.extend(defaultOcclusionOptions, {
   isRtl             : false,
   staticHeight      : false,
   lazyRenderEnabled : false,
-  autoScroll        : false,
 
   dragEndAction                  : undefined,
   determineForeignPositionAction : undefined,
@@ -130,6 +129,17 @@ export default Component.extend(defaultOcclusionOptions, {
       && !sourceIndex
     )
   }),
+
+  // ----- LifeCycle methods -----
+  didInsertElement () {
+    const { elementId, registerApi } = this.getProperties('elementId', 'registerApi')
+    if (registerApi) {
+      registerApi({
+        elementId,
+        scrollToBottom : this.scrollToBottom.bind(this),
+      })
+    }
+  },
 
   // ----- Overridden methods -----
   dragEnter (event) {
@@ -242,8 +252,6 @@ export default Component.extend(defaultOcclusionOptions, {
     dragSort.draggingOver({group, index, items, isDraggingUp})
   },
 
-
-
   // ----- Observers -----
   setIsExpanded2 : observer('isExpanded', function () {
     // The delay is necessary for HTML class to update with a delay.
@@ -255,12 +263,9 @@ export default Component.extend(defaultOcclusionOptions, {
     })
   }),
 
-  scrollToBottom : observer('items.length', 'autoScroll', function () {
-    // The delay is necessary to prevent scrollHeight computation before DOM update
-    next(() => {
-      if (this.get('autoScroll')) {
-        this.element.scrollTop = this.element.scrollHeight
-      }
-    })
-  }),
+  // ----- Expose Public API -----
+  scrollToBottom () {
+    const element     = this.get('element')
+    element.scrollTop = element.scrollHeight
+  },
 })

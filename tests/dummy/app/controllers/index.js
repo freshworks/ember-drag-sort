@@ -4,10 +4,12 @@ import {A} from '@ember/array'
 import { task, timeout } from 'ember-concurrency'
 import RSVP from 'rsvp'
 import { computed } from '@ember/object'
-
-
+import { run } from '@ember/runloop'
 
 export default Controller.extend({
+  dragSortApi    : undefined,
+  itemsThreshold : 10,
+  networkFailure : false,
 
   items1 : computed(() =>
     A([
@@ -232,24 +234,32 @@ export default Controller.extend({
     }
   )),
 
-  itemsThreshold : 10,
-
-  networkFailure : false,
-  autoScroll     : true,
-
   actions : {
+    registerApi (api) {
+      this.set('dragSortApi', api)
+    },
+
     appendItems () {
-      this.get('items16').pushObjects(A([
+      const { items16, dragSortApi } = this.getProperties('items16', 'dragSortApi')
+      items16.pushObjects(A([
         {name : 'Foo'},
         {name : 'Bar'},
         {name : 'Baz'},
         {name : 'Quux'},
         {name : 'Zomg'},
       ]))
+
+      run.next(() => {
+        dragSortApi.scrollToBottom()
+      })
     },
 
     removeItems () {
-      this.get('items16').removeAt(0, 5)
+      const { items16, dragSortApi } = this.getProperties('items16', 'dragSortApi')
+      items16.removeAt(0, 5)
+      run.next(() => {
+        dragSortApi.scrollToBottom()
+      })
     },
 
     dragEnd ({sourceList, sourceIndex, targetList, targetIndex}) {
