@@ -405,17 +405,17 @@
 
       <article class="list">
         <h4>List with Occlusion Rendering </h4>
-          {{#drag-sort-list
-            items             = items15
-            dragEndAction     = (action 'dragEnd')
-            lazyRenderEnabled = true
-            class             = "height--400"
-            as |item|
-          }}
-            <div class="the-item">
-              {{item.name}}
-            </div>
-          {{/drag-sort-list}}
+        {{#drag-sort-list
+          items             = items15
+          dragEndAction     = (action 'dragEnd')
+          lazyRenderEnabled = true
+          class             = "height--400"
+          as |item|
+        }}
+          <div class="the-item">
+            {{item.name}}
+          </div>
+        {{/drag-sort-list}}
       </article>
 
       <article class="list occlusion">

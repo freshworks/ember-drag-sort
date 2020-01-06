@@ -20,6 +20,18 @@ import { triggerEvent, settled } from '@ember/test-helpers'
 // }
 
 
+function _getElementNode (node) {
+  if (typeof node === 'string') {
+    node = document.querySelector(node)
+  }
+
+  return node
+}
+
+function _getListItems (containerNode) {
+  return containerNode.querySelectorAll('.dragSortItem')
+}
+
 
 export default function trigger (elementOrSelector, eventName, isDraggingUp) {
   const element =
@@ -43,7 +55,9 @@ export default function trigger (elementOrSelector, eventName, isDraggingUp) {
 
 
 export async function sort (sourceList, sourceIndex, targetIndex, above, handleSelector) {
-  let sourceItem = sourceList.children[sourceIndex]
+  sourceList          = _getElementNode(sourceList)
+  let sourceListItems = _getListItems(sourceList)
+  let sourceItem      = sourceListItems[sourceIndex]
 
   assert(`source item not exist at index ${sourceIndex}`, sourceItem)
 
@@ -51,7 +65,7 @@ export async function sort (sourceList, sourceIndex, targetIndex, above, handleS
 
   assert('handle does not exist', !handleSelector || sourceItem)
 
-  const targetItem = sourceList.children[targetIndex]
+  const targetItem = sourceListItems[targetIndex]
 
   assert(`target item not exist at index ${targetIndex}`, targetItem)
 
@@ -66,7 +80,13 @@ export async function sort (sourceList, sourceIndex, targetIndex, above, handleS
 
 
 export async function move (sourceList, sourceIndex, targetList, targetIndex, above, handleSelector) {
-  let sourceItem       = sourceList.children[sourceIndex]
+  sourceList = _getElementNode(sourceList)
+  targetList = _getElementNode(targetList)
+
+  let sourceListItems = _getListItems(sourceList)
+  let targetListItems = _getListItems(targetList)
+
+  let sourceItem = sourceListItems[sourceIndex]
 
   assert(`source item not exist at index ${sourceIndex}`, sourceItem)
 
@@ -74,7 +94,7 @@ export async function move (sourceList, sourceIndex, targetList, targetIndex, ab
 
   assert('handle does not exist', !handleSelector || sourceItem)
 
-  const targetListLength = targetList.childElementCount
+  const targetListLength = targetListItems.length
 
   if (targetListLength) {
     if (targetIndex == null) {
@@ -82,7 +102,7 @@ export async function move (sourceList, sourceIndex, targetList, targetIndex, ab
       above       = false
     }
 
-    const targetItem = targetList.children[targetIndex]
+    const targetItem = targetListItems[targetIndex]
 
     assert(`target item not exist at index ${targetIndex}`, targetItem)
 

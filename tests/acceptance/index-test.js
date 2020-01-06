@@ -40,6 +40,7 @@ module('Acceptance | index', function (hooks) {
     const list = page.listGroups(0).lists(0)
 
     await list.sort(0, 1, false)
+    await settled()
 
     const expectedTitles = ['Bar', 'Foo', 'Baz', 'Quux']
 
@@ -60,6 +61,7 @@ module('Acceptance | index', function (hooks) {
     const list1 = page.listGroups(0).lists(1)
 
     await list0.move(0, list1, 1, false)
+    await settled()
 
     const expectedTitles0 = ['Bar',  'Baz', 'Quux']
     const expectedTitles1 = ['☰ Zomg', '☰ Lol', '☰ Foo']
