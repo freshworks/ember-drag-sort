@@ -32,7 +32,7 @@ module('Acceptance | index', function (hooks) {
   test('sorting a list', async function (assert) {
     await page.visit()
     await page.simple1.sort(0, 1, false)
-    // await settled()
+    await settled()
 
     assertListItems(page.simple1, ['Bar', 'Foo', 'Baz', 'Quux'], assert, 'Simple 1')
   })

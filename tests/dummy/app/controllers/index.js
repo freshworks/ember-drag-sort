@@ -9,7 +9,6 @@ import { run } from '@ember/runloop'
 export default Controller.extend({
   dragSortApi    : undefined,
   itemsThreshold : 10,
-  networkFailure : false,
 
   simple1 : computed(() =>
     A([
