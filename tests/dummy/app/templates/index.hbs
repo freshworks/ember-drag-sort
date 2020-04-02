@@ -472,6 +472,7 @@
         <h4>List without occlusion render</h4>
 
         {{#drag-sort-list
+          id            = "occlusion-1"
           items         = occlusion1
           handle        = '.handle'
           class         = "height--400"
@@ -488,6 +489,7 @@
       <article class="list">
         <h4>List with Occlusion Rendering </h4>
         {{#drag-sort-list
+          id                = "occlusion-2"
           items             = occlusion2
           dragEndAction     = (action 'dragEnd')
           lazyRenderEnabled = true
@@ -519,6 +521,7 @@
         <p class="info">Occlusion will be activated when number of items exceed the above threshold value</p>
 
         {{#drag-sort-list
+          id                      = "occlusion-3"
           items                   = occulsion3
           dragEndAction           = (action 'dragEnd')
           lazyRenderEnabled       = true

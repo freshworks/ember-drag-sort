@@ -4,7 +4,6 @@ import { setupApplicationTest } from 'ember-qunit'
 import page from 'dummy/tests/pages/index'
 
 
-
 function assertListItems (list, expectedTitles, assert, message) {
   const m = `${message}: items count`
   assert.equal(list.items().count, expectedTitles.length, m)
@@ -60,6 +59,7 @@ module('Acceptance | index', function (hooks) {
   test('dragging into a sortable list when the sourcelist has the determineForeignPositionAction parameter', async function (assert) {
     await page.visit()
     await page.foreign1.move(0, page.foreign2, 0, true)
+    await settled()
 
     assertListItems(page.foreign1, ['Baz', 'Foo', 'Quux'], assert, 'Foreign 1')
     assertListItems(page.foreign2, ['Bar', 'Zomg', 'Lol'], assert, 'Foreign 2')
@@ -133,6 +133,7 @@ module('Acceptance | index', function (hooks) {
   test('foreign position: create a copy by dragging out', async function (assert) {
     await page.visit()
     await page.copies1.move(0, page.copies2, 0, false)
+    await settled()
 
     assertListItems(page.copies1, ['Foo', 'Bar', 'Baz'], assert, 'Copies 1')
     assertListItems(page.copies2, ['Quux', 'Foo'], assert, 'Copies 2')
@@ -143,7 +144,7 @@ module('Acceptance | index', function (hooks) {
   test('foreign position: remove a copy by dragging in', async function (assert) {
     await page.visit()
     await page.copies2.move(0, page.copies1, 0, false)
-
+    await settled()
     assertListItems(page.copies1, ['Foo', 'Bar', 'Baz'], assert, 'Copies 1')
     assertListItems(page.copies2, [], assert, 'Copies 2')
   })
@@ -153,7 +154,7 @@ module('Acceptance | index', function (hooks) {
   test('source only: create a copy by dragging out', async function (assert) {
     await page.visit()
     await page.sourceOnly1.move(0, page.sourceOnly2, 0, false)
-
+    await settled()
     assertListItems(page.sourceOnly1, ['Foo', 'Bar', 'Baz'], assert, 'Source only 1')
     assertListItems(page.sourceOnly2, ['Quux', 'Foo'], assert, 'Source only 2')
   })
@@ -166,5 +167,23 @@ module('Acceptance | index', function (hooks) {
 
     assertListItems(page.sourceOnly1, ['Foo', 'Bar', 'Baz'], assert, 'Source only 1')
     assertListItems(page.sourceOnly2, ['Quux'], assert, 'Source only 2')
+  })
+
+  test('occlusion: sorting within same list', async function (assert) {
+    await page.visit()
+    await page.occlusion2.sort(0, 1, false)
+    await settled()
+
+    assert.equal(page.occlusion2.items(0).content.title, 'Bar')
+    assert.equal(page.occlusion2.items(1).content.title, 'Foo')
+  })
+
+  test('occlusion: sorting between 2 list', async function (assert) {
+    await page.visit()
+    await page.occlusion2.move(0, page.occlusion1, 0, true)
+    await settled()
+    assert.equal(page.occlusion2.items(0).content.title, 'Bar')
+    assert.equal(page.occlusion1.items(0).content.title, '☰ Foo')
+    assert.equal(page.occlusion1.items(1).content.title, '☰ Foo')
   })
 })

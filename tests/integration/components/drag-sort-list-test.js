@@ -245,7 +245,9 @@ module('Integration | Component | drag-sort-list', function (hooks) {
     assert.equal(findAll('.dragSortItem').length, arr.length)
 
     this.set('lazyRenderEnabled', true)
-    itemList.scrollTop = 100
+
+    await settled()
+    itemList.scrollTop = itemList.scrollHeight
     await settled()
 
     assert.ok(itemList.scrollTop > 0, 'Item List should scroll')
