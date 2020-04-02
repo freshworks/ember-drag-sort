@@ -52,6 +52,7 @@ export default Component.extend(defaultOcclusionOptions, {
     'isExpanded2:-isExpanded',
     'isEmpty:-isEmpty',
     'isLazyRenderActive:-isLazyRenderActive',
+    'sourceOnly:-sourceOnlyList',
   ],
 
 

@@ -8,45 +8,46 @@
 ![node-versions 8+](https://img.shields.io/badge/node--versions-8%2B-yellowgreen.svg)
 ![ember-cli 3.8.1](https://img.shields.io/badge/uses%20ember--cli-3.8.1-blue.svg)
 
-* [ember-drag-sort](#ember-drag-sort)
-  * [Support](#support)
-  * [About](#about)
-    * [Features](#features)
-    * [Demo](#demo)
-  * [Versions, branches and jQuery](#versions-branches-and-jquery)
-  * [Known issues](#known-issues)
-    * [Browser support](#browser-support)
-  * [Installation](#installation)
-  * [Usage](#usage)
-    * [Basic usage](#basic-usage)
-    * [The drag end action](#the-drag-end-action)
-    * [Occlussion Renderer Usage](#occlussion-renderer-usage)
-    * [The determine foreign position action](#the-determine-foreign-position-action)
-    * [Passing additional arguments](#passing-additional-arguments)
-    * [drag-sort-list arguments reference](#drag-sort-list-arguments-reference)
-    * [HTML classes](#html-classes)
-    * [CSS concerns](#css-concerns)
-    * [Events](#events)
-  * [Test helpers](#test-helpers)
-    * [trigger](#trigger)
-    * [sort](#sort)
-    * [move](#move)
-    * [Page object components](#page-object-components)
-      * [Importing page object components](#importing-page-object-components)
-      * [Including page object components into your page objects](#including-page-object-components-into-your-page-objects)
-      * [Extending the dragSortList page object component](#extending-the-dragsortlist-page-object-component)
-      * [Extending the dragSortItem page object component](#extending-the-dragsortitem-page-object-component)
-      * [Providing the drag handle selector](#providing-the-drag-handle-selector)
-      * [Sorting the dragSortList page object component](#sorting-the-dragsortlist-page-object-component)
-  * [Development](#development)
-    * [Do not use npm, use yarn](#do-not-use-npm-use-yarn)
-    * [Installation for development](#installation-for-development)
-    * [Running](#running)
-    * [Branch names](#branch-names)
-    * [Updating the table of contents](#updating-the-table-of-contents)
-    * [Demo deployment](#demo-deployment)
-  * [Credits](#credits)
-  * [License](#license)
+- [ember-drag-sort](#ember-drag-sort)
+  - [Support](#support)
+  - [About](#about)
+    - [Features](#features)
+    - [Demo](#demo)
+  - [Versions, branches and jQuery](#versions-branches-and-jquery)
+  - [Known issues](#known-issues)
+    - [Browser support](#browser-support)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Basic usage](#basic-usage)
+    - [The drag end action](#the-drag-end-action)
+    - [Occlussion Renderer Usage](#occlussion-renderer-usage)
+    - [The determine foreign position action](#the-determine-foreign-position-action)
+    - [Marking a list as a source only bucket](#marking-a-list-as-a-source-only-bucket)
+    - [Passing additional arguments](#passing-additional-arguments)
+    - [drag-sort-list arguments reference](#drag-sort-list-arguments-reference)
+    - [HTML classes](#html-classes)
+    - [CSS concerns](#css-concerns)
+    - [Events](#events)
+  - [Test helpers](#test-helpers)
+    - [trigger](#trigger)
+    - [sort](#sort)
+    - [move](#move)
+    - [Page object components](#page-object-components)
+      - [Importing page object components](#importing-page-object-components)
+      - [Including page object components into your page objects](#including-page-object-components-into-your-page-objects)
+      - [Extending the dragSortList page object component](#extending-the-dragsortlist-page-object-component)
+      - [Extending the dragSortItem page object component](#extending-the-dragsortitem-page-object-component)
+      - [Providing the drag handle selector](#providing-the-drag-handle-selector)
+      - [Sorting the dragSortList page object component](#sorting-the-dragsortlist-page-object-component)
+  - [Development](#development)
+    - [Do not use npm, use yarn](#do-not-use-npm-use-yarn)
+    - [Installation for development](#installation-for-development)
+    - [Running](#running)
+    - [Branch names](#branch-names)
+    - [Updating the table of contents](#updating-the-table-of-contents)
+    - [Demo deployment](#demo-deployment)
+  - [Credits](#credits)
+  - [License](#license)
 
 
 
@@ -322,7 +323,36 @@ Incorrect:
 
     determineForeignPositionAction = 'determineForeignPosition'
 
+### Marking a list as a source only bucket
 
+Sometimes you may have a need to define a bucket of items that is "source only". This means
+that you can only grab items from it to add to other buckets. The source bucket can never be
+reordered or modified by dragging items out of it. It is only a source to drag to other lists.
+
+This list would be marked as source only:
+
+```hbs
+{{#drag-sort-list
+  items         = items1
+  dragEndAction = (action 'dragEnd')
+  sourceOnly    = true
+  as |item|
+}}
+  {{item.name}}
+{{/drag-sort-list}}
+```
+
+You could then have one or more other lists which you could drag the items from the source list into.
+
+```hbs
+{{#drag-sort-list
+  items         = items2
+  dragEndAction = (action 'dragEnd')
+  as |item|
+}}
+  {{item.name}}
+{{/drag-sort-list}}
+```
 
 ### Passing additional arguments
 
