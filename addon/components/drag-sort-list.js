@@ -10,10 +10,11 @@ import { A } from '@ember/array'
 
 // ----- Own modules -----
 import layout from '../templates/components/drag-sort-list'
+import defaultOcclusionOptions from '../constants/occlusion-options'
 
 
 
-export default Component.extend({
+export default Component.extend(defaultOcclusionOptions, {
 
   // ----- Arguments -----
   additionalArgs  : undefined,
@@ -24,13 +25,14 @@ export default Component.extend({
   childTagName    : 'div',
   handle          : null,
 
-  isHorizontal : false,
-  isRtl        : false,
+  isHorizontal      : false,
+  isRtl             : false,
+  staticHeight      : false,
+  lazyRenderEnabled : false,
 
   dragEndAction                  : undefined,
   determineForeignPositionAction : undefined,
-
-
+  itemsThreshold                 : undefined,
 
   // ----- Services -----
   dragSort : service(),
@@ -49,6 +51,7 @@ export default Component.extend({
     'isDraggingOver:-isDraggingOver',
     'isExpanded2:-isExpanded',
     'isEmpty:-isEmpty',
+    'isLazyRenderActive:-isLazyRenderActive',
     'sourceOnly:-sourceOnlyList',
   ],
 
@@ -65,9 +68,24 @@ export default Component.extend({
   draggedItem         : reads('dragSort.draggedItem'),
   lastDragEnteredList : reads('dragSort.lastDragEnteredList'),
   isVertical          : not('isHorizontal'),
-
+  renderAll           : not('isLazyRenderActive'),
 
   // ----- Computed properties -----
+  isLazyRenderActive : computed('lazyRenderEnabled', 'itemsThreshold', 'isVertical', 'items.length', function () {
+    let {
+      lazyRenderEnabled,
+      itemsThreshold,
+      isVertical,
+      'items.length': itemCount,
+    } = this.getProperties('lazyRenderEnabled', 'itemsThreshold', 'isVertical', 'items.length')
+
+    itemsThreshold = parseInt(itemsThreshold)
+
+    return isNaN(itemsThreshold)
+      ? lazyRenderEnabled && isVertical
+      : lazyRenderEnabled && isVertical && itemCount > itemsThreshold
+  }).readOnly(),
+
   isDragging : computed('dragSort.{isDragging,group}', 'group', function () {
     const isDragging       = this.get('dragSort.isDragging')
     const group            = this.get('group')
@@ -113,7 +131,16 @@ export default Component.extend({
     )
   }),
 
-
+  // ----- LifeCycle methods -----
+  didInsertElement () {
+    const { elementId, registerApi } = this.getProperties('elementId', 'registerApi')
+    if (registerApi) {
+      registerApi({
+        elementId,
+        scrollToBottom : this.scrollToBottom.bind(this),
+      })
+    }
+  },
 
   // ----- Overridden methods -----
   dragEnter (event) {
@@ -226,8 +253,6 @@ export default Component.extend({
     dragSort.draggingOver({group, index, items, isDraggingUp})
   },
 
-
-
   // ----- Observers -----
   setIsExpanded2 : observer('isExpanded', function () {
     // The delay is necessary for HTML class to update with a delay.
@@ -238,4 +263,10 @@ export default Component.extend({
       this.set('isExpanded2', this.get('isExpanded'))
     })
   }),
+
+  // ----- Expose Public API -----
+  scrollToBottom () {
+    const element     = this.get('element')
+    element.scrollTop = element.scrollHeight
+  },
 })

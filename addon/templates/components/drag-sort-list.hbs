@@ -1,4 +1,20 @@
-{{#each items as |item index|}}
+{{#vertical-collection
+  items
+  key=key
+  estimateHeight=estimateHeight
+  bufferSize=bufferSize
+  staticHeight=staticHeight
+  shouldRecycle=shouldRecycle
+  idForFirstItem=idForFirstItem
+  renderFromLast=renderFromLast
+  occlusionTagName=occlusionTagName
+  renderAll=renderAll
+  firstReached=firstReached
+  lastReached=lastReached
+  firstVisibleChanged=firstVisibleChanged
+  lastVisibleChanged=lastVisibleChanged
+  as |item index|
+}}
   {{#drag-sort-item
     additionalArgs                 = additionalArgs
     item                           = item
@@ -17,4 +33,4 @@
   }}
     {{yield item index}}
   {{/drag-sort-item}}
-{{/each}}
+{{/vertical-collection}}

@@ -4,10 +4,29 @@ import {A} from '@ember/array'
 import { task, timeout } from 'ember-concurrency'
 import RSVP from 'rsvp'
 import { computed } from '@ember/object'
+import { run } from '@ember/runloop'
 
 
+const repeatedArray = (n) => {
+  let res = A([])
+
+  while (n > 0) {
+    res.pushObjects(A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Zomg'},
+    ]))
+    n--
+  }
+
+  return res
+}
 
 export default Controller.extend({
+  dragSortApi    : undefined,
+  itemsThreshold : 10,
 
   simple1 : computed(() =>
     A([
@@ -195,9 +214,48 @@ export default Controller.extend({
     ])
   ),
 
+  occlusion1 : computed(() => repeatedArray(9)),
+
+  occlusion2 : computed(() => repeatedArray(9)),
+
+  occulsion3 : computed(() =>
+    A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+    ])
+  ),
+
   networkFailure : false,
 
   actions : {
+    registerApi (api) {
+      this.set('dragSortApi', api)
+    },
+
+    appendItems () {
+      const { occulsion3, dragSortApi } = this.getProperties('occulsion3', 'dragSortApi')
+      occulsion3.pushObjects(A([
+        {name : 'Foo'},
+        {name : 'Bar'},
+        {name : 'Baz'},
+        {name : 'Quux'},
+        {name : 'Zomg'},
+      ]))
+
+      run.next(() => {
+        dragSortApi.scrollToBottom()
+      })
+    },
+
+    removeItems () {
+      const { occulsion3, dragSortApi } = this.getProperties('occulsion3', 'dragSortApi')
+      occulsion3.removeAt(0, 5)
+      run.next(() => {
+        dragSortApi.scrollToBottom()
+      })
+    },
+
     dragEnd ({sourceList, sourceIndex, targetList, targetIndex}) {
       if (sourceList === targetList && sourceIndex === targetIndex) return
 

@@ -20,6 +20,7 @@
   - [Usage](#usage)
     - [Basic usage](#basic-usage)
     - [The drag end action](#the-drag-end-action)
+    - [Occlussion Renderer Usage](#occlussion-renderer-usage)
     - [The determine foreign position action](#the-determine-foreign-position-action)
     - [Marking a list as a source only bucket](#marking-a-list-as-a-source-only-bucket)
     - [Passing additional arguments](#passing-additional-arguments)
@@ -211,7 +212,56 @@ Incorrect:
 
     dragEndAction = 'dragEnd'
 
+### Occlussion Renderer Usage
 
+Drag-Sort-List is extended by [@html-next/vertical-collection](https://github.com/html-next/vertical-collection) add-on. Following are the minimal properties are exposed to drag-sort-list:
+
+| Property      | Type   | Description                                                            |
+|:--------------|:-------|:-----------------------------------------------------------------------|
+| `lazyRenderEnabled` | Boolean  | set `true` to activate.                             |
+| `estimateHeight`    | Number   | Optional - Estimated height of item.                |
+| `itemsThreshold`    | Number   | Optional.                                           |
+| `registerApi`       | Function | Optional - returns public API - `scrollToBottom`    |
+
+Occlusion renderer can be used for a huge list of items to improve the perfomance. It is currently supported for the `vertical` type of lists. Thresholds property can be used to enable occlusion renderer on demand based on the count of items.
+
+> **`Note:`**
+> - Refer [@html-next/vertical-collection](https://github.com/html-next/vertical-collection) for more information on the occlusion vertical-collection properties.
+> - `containerSelector` property from vertical-collection is not applicable as drag-sort-list will be the default container for the items. This allows flexibility to set class directly on the container *(for ex: setting height for occlusion renderer to effectively work with scroll)*
+
+**Template Usage**
+```handlebars
+{{#drag-sort-list
+  items             = items
+  lazyRenderEnabled = true
+  itemsThreshold    = 30
+  registerApi       = (action 'registerApi')
+  class             = "height--400"
+  as |item|
+}}
+  <div>
+    {{item.name}}
+  </div>
+{{/drag-sort-list}}
+```
+
+**To register the public API**
+```js
+{
+  dragSortApi: undefined,
+  ...
+  actions : {
+    registerApi (api) {
+      this.set('dragSortApi', api)
+    },
+  }
+}
+```
+
+**To use the public API**
+```js
+this.get('dragSortApi').scrollToBottom();
+```
 
 ### The determine foreign position action
 
@@ -362,8 +412,10 @@ dragEndAction({ sourceList, sourceIndex, sourceArgs, targetList, targetIndex, ta
 | `isHorizontal`                   | Boolean                                      | `false`       | Displays the list horizontally. :warning: Horizontal lists don't work well when nested.                                                                                                         |
 | `isRtl`                          | Boolean                                      | `false`       | RTL - Right to left. Might be useful for certain languages. :warning: Has no effect on vertical lists.                                                                                          |
 | `additionalArgs`                 | <any>                                        | `undefined`   | A catch-all for additional arguments you may want to access in the `dragEndAction`. Can be used for things like passing the parent of the list in for saving `hasMany` relationships.           |
-
-
+| `estimateHeight`                 | Number                                       | `50`          | Estimated height of each item to be rendered. Use the best guess as occlusion renderer will use this to determine how many items are to be displayed virtually, before and after the vertical-collection viewport.                                                   |
+| `lazyRenderEnabled`              | Boolean                                      | `false`       | Occlusion renderer will be enabled for the `vertical` type items. It improves the performance by displaying only a part of list items based on the container height. Requires a `fixed height` for the container, and a vertical scroll-bar will appear                |
+| `itemsThreshold`                 | Number                                       | `undefined`   | Occlusion renderer will be activated only when the given threshold is exceeded by the number of items. It requires `lazyRenderEnabled` option to be `true`.                                        |
+| `registerApi`                    | Function                                    | `undefined`       | This action will return an API assocaited with the drag-sort-list, `scrollToBottom` which can be called at any given point of time to scroll to the bottom of the list.                           |
 
 ### HTML classes
 
@@ -371,11 +423,12 @@ dragEndAction({ sourceList, sourceIndex, sourceArgs, targetList, targetIndex, ta
 
 | HTML class         | Applied when...                                                                                                                                                                   |
 |:-------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `-isEmpty`         | The given list is empty.                                                                                                                                                          |
-| `-draggingEnabled` | Dragging is enabled via the `draggingEnabled` attribute.                                                                                                                          |
-| `-isDragging`      | Dragging is in progress and the given list is either a source list or belongs to the same group as the source list.                                                               |
-| `-isDraggingOver`  | Dragging is in progress and the placeholder is within the given list. This class is removed from a list when an item is dragged into a different list.                            |
-| `-isExpanded`      | Dragging is in progress and the given list is either empty or contains only the dragged item. Used to give some height to the list, so that the item can be dragged back into it. |
+| `-isEmpty`            | The given list is empty.                                                                                                                                                          |
+| `-draggingEnabled`    | Dragging is enabled via the `draggingEnabled` attribute.                                                                                                                          |
+| `-isDragging`         | Dragging is in progress and the given list is either a source list or belongs to the same group as the source list.                                                               |
+| `-isDraggingOver`     | Dragging is in progress and the placeholder is within the given list. This class is removed from a list when an item is dragged into a different list.                            |
+| `-isExpanded`         | Dragging is in progress and the given list is either empty or contains only the dragged item. Used to give some height to the list, so that the item can be dragged back into it. |
+| `-isLazyRenderActive` | Occulsion renderer is enabled and active. |
 
 The individual item component has HTML class `dragSortItem`. It also assumes the following classes dynamically:
 

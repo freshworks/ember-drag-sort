@@ -212,4 +212,92 @@ module('Integration | Component | drag-sort-list', function (hooks) {
       targetIndex : 1,
     }))
   })
+
+  test('occlusion rederer without threshold', async function (assert) {
+    let arr = [ ]
+
+    for (let i = 1; i <= 100; i++) {
+      arr.push({name : `item ${i}`})
+    }
+
+    this.setProperties({
+      items             : A(arr),
+      lazyRenderEnabled : false,
+    })
+
+    await render(hbs`
+      {{#drag-sort-list
+        lazyRenderEnabled  = lazyRenderEnabled
+        class              = "height--400"
+        items              = items
+        staticHeight       = true
+        estimateItemHeight = 30
+        as |item|
+      }}
+        <div>
+          {{item.name}}
+        </div>
+      {{/drag-sort-list}}
+    `)
+
+    const itemList = find('.dragSortList')
+    assert.dom(itemList).doesNotHaveClass('-isLazyRenderActive')
+    assert.equal(findAll('.dragSortItem').length, arr.length)
+
+    this.set('lazyRenderEnabled', true)
+
+    await settled()
+    itemList.scrollTop = itemList.scrollHeight
+    await settled()
+
+    assert.ok(itemList.scrollTop > 0, 'Item List should scroll')
+    assert.dom(itemList).hasClass('-isLazyRenderActive')
+    assert.notEqual(findAll('.dragSortItem').length, arr.length)
+  })
+
+
+  test('occlusion rederer with threshold', async function (assert) {
+    let arr = [ ]
+
+    for (let i = 1; i <= 20; i++) {
+      arr.push({name : `item ${i}`})
+    }
+
+    this.setProperties({
+      items             : A(arr),
+      lazyRenderEnabled : true,
+      itemsThreshold    : 20,
+    })
+
+    await render(hbs`
+      {{#drag-sort-list
+        lazyRenderEnabled  = lazyRenderEnabled
+        itemsThreshold     = itemsThreshold
+        class              = "height--400"
+        items              = items
+        staticHeight       = true
+        estimateItemHeight = 30
+        as |item|
+      }}
+        <div>
+          {{item.name}}
+        </div>
+      {{/drag-sort-list}}
+    `)
+
+    // occlusion threshold not exceeded - renderer inactive
+    const itemList = find('.dragSortList')
+    assert.dom(itemList).doesNotHaveClass('-isLazyRenderActive')
+    assert.equal(findAll('.dragSortItem').length, arr.length)
+
+    // add 1 object - threshold exceeded - renderer active
+    this.get('items').pushObject({name : 'item 21'})
+    await settled()
+    assert.dom(itemList).hasClass('-isLazyRenderActive')
+
+    // Increase threshold - renderer de-active
+    this.set('itemsThreshold', 21)
+    await settled()
+    assert.dom(itemList).doesNotHaveClass('-isLazyRenderActive')
+  })
 })
