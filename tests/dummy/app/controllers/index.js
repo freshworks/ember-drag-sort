@@ -6,6 +6,24 @@ import RSVP from 'rsvp'
 import { computed } from '@ember/object'
 import { run } from '@ember/runloop'
 
+
+const repeatedArray = (n) => {
+  let res = A([])
+
+  while (n > 0) {
+    res.pushObjects(A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+      {name : 'Quux'},
+      {name : 'Zomg'},
+    ]))
+    n--
+  }
+
+  return res
+}
+
 export default Controller.extend({
   dragSortApi    : undefined,
   itemsThreshold : 10,
@@ -124,59 +142,6 @@ export default Controller.extend({
     ])
   ),
 
-  items15 : computed(() =>
-    A([
-      {name : 'Foo'},
-      {name : 'Bar'},
-      {name : 'Baz'},
-      {name : 'Quux'},
-      {name : 'Zomg'},
-      {name : 'Lol'},
-      {name : 'Quuz'},
-      {name : 'Hello'},
-      {name : 'World'},
-      {name : 'Foo'},
-      {name : 'Bar'},
-      {name : 'Baz'},
-      {name : 'Quux'},
-      {name : 'Lol'},
-      {name : 'Quuz'},
-      {name : 'Hello'},
-      {name : 'World'},
-      {name : 'Foo'},
-      {name : 'Bar'},
-      {name : 'Baz'},
-      {name : 'Quux'},
-      {name : 'Zomg'},
-      {name : 'Lol'},
-      {name : 'Quuz'},
-      {name : 'Hello'},
-      {name : 'World'},
-      {name : 'Foo'},
-      {name : 'Bar'},
-      {name : 'Baz'},
-      {name : 'Quux'},
-      {name : 'Zomg'},
-      {name : 'Lol'},
-      {name : 'Quuz'},
-      {name : 'Hello'},
-      {name : 'World'},
-      {name : 'Foo'},
-      {name : 'Bar'},
-      {name : 'Baz'},
-      {name : 'Quux'},
-      {name : 'Zomg'},
-    ])
-  ),
-
-  items16 : computed(() =>
-    A([
-      {name : 'Foo'},
-      {name : 'Bar'},
-      {name : 'Baz'},
-    ])
-  ),
-
   nestedItem : computed(() => (
     {
       name     : 'Foo',
@@ -249,6 +214,18 @@ export default Controller.extend({
     ])
   ),
 
+  occlusion1 : computed(() => repeatedArray(9)),
+
+  occlusion2 : computed(() => repeatedArray(9)),
+
+  occulsion3 : computed(() =>
+    A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+    ])
+  ),
+
   networkFailure : false,
 
   actions : {
@@ -257,8 +234,8 @@ export default Controller.extend({
     },
 
     appendItems () {
-      const { items16, dragSortApi } = this.getProperties('items16', 'dragSortApi')
-      items16.pushObjects(A([
+      const { occulsion3, dragSortApi } = this.getProperties('occulsion3', 'dragSortApi')
+      occulsion3.pushObjects(A([
         {name : 'Foo'},
         {name : 'Bar'},
         {name : 'Baz'},
@@ -272,8 +249,8 @@ export default Controller.extend({
     },
 
     removeItems () {
-      const { items16, dragSortApi } = this.getProperties('items16', 'dragSortApi')
-      items16.removeAt(0, 5)
+      const { occulsion3, dragSortApi } = this.getProperties('occulsion3', 'dragSortApi')
+      occulsion3.removeAt(0, 5)
       run.next(() => {
         dragSortApi.scrollToBottom()
       })

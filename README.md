@@ -232,7 +232,7 @@ Occlusion renderer can be used for a huge list of items to improve the perfomanc
 **Template Usage**
 ```handlebars
 {{#drag-sort-list
-  items             = items15
+  items             = items
   lazyRenderEnabled = true
   itemsThreshold    = 30
   registerApi       = (action 'registerApi')

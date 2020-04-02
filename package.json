@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^0.6.3",
-    "@html-next/vertical-collection": "^1.0.0",
+    "@html-next/vertical-collection": "git+ssh://git@github.com:freshdesk/vertical-collection.git#v2.4",
     "broccoli-asset-rev": "^2.7.0",
     "ember-auto-import": "^1.2.21",
     "ember-cli": "~3.8.1",
@@ -88,7 +88,7 @@
     "sinon-chai": "^3.3.0"
   },
   "peerDependencies": {
-    "@html-next/vertical-collection": "^1.0.0"
+    "@html-next/vertical-collection": "git+ssh://git@github.com:freshdesk/vertical-collection.git#v2.4"
   },
   "engines": {
     "node": "8.* || >= 10.*"
