@@ -168,4 +168,23 @@ module('Acceptance | index', function (hooks) {
     assertListItems(page.sourceOnly1, ['Foo', 'Bar', 'Baz'], assert, 'Source only 1')
     assertListItems(page.sourceOnly2, ['Quux'], assert, 'Source only 2')
   })
+
+  test('occlusion: sorting within same list', async function (assert) {
+    await page.visit()
+    await page.occlusion2.sort(0, 1, false)
+    await settled()
+
+    assert.equal(page.occlusion2.items(0).content.title, 'Bar')
+    assert.equal(page.occlusion2.items(1).content.title, 'Foo')
+  })
+
+  test('occlusion: sorting between 2 list', async function (assert) {
+    await page.visit()
+    await page.occlusion2.move(0, page.occlusion1, 0, true)
+    await settled()
+
+    assert.equal(page.occlusion2.items(0).content.title, 'Bar')
+    assert.equal(page.occlusion1.items(0).content.title, '☰ Foo')
+    assert.equal(page.occlusion1.items(1).content.title, '☰ Foo')
+  })
 })

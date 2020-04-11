@@ -1,0 +1,36 @@
+{{#vertical-collection
+  items
+  key=key
+  estimateHeight=estimateHeight
+  bufferSize=bufferSize
+  staticHeight=staticHeight
+  shouldRecycle=shouldRecycle
+  idForFirstItem=idForFirstItem
+  renderFromLast=renderFromLast
+  occlusionTagName=occlusionTagName
+  renderAll=renderAll
+  firstReached=firstReached
+  lastReached=lastReached
+  firstVisibleChanged=firstVisibleChanged
+  lastVisibleChanged=lastVisibleChanged
+  as |item index|
+}}
+  {{#drag-sort-item
+    additionalArgs                 = additionalArgs
+    item                           = item
+    index                          = index
+    items                          = items
+    group                          = group
+    handle                         = handle
+    class                          = childClass
+    tagName                        = childTagName
+    isHorizontal                   = isHorizontal
+    isRtl                          = isRtl
+    draggingEnabled                = draggingEnabled
+    dragEndAction                  = dragEndAction
+    determineForeignPositionAction = determineForeignPositionAction
+    sourceOnly                     = sourceOnly
+  }}
+    {{yield item index}}
+  {{/drag-sort-item}}
+{{/vertical-collection}}
