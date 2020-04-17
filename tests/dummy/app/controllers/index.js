@@ -227,7 +227,7 @@ export default Controller.extend({
       occulsion3.pushObjects(repeatedArray(1))
 
       // Scroll after the addition of items is rendered
-      run.next('afterRender', () => {
+      run.next(() => {
         dragSortApi.scrollToBottom()
       })
     },
@@ -237,7 +237,7 @@ export default Controller.extend({
       occulsion3.removeAt(0, 3)
 
       // Scroll after the addition of items is rendered
-      run.next('afterRender', () => {
+      run.next(() => {
         dragSortApi.scrollToBottom()
       })
     },
