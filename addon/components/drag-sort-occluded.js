@@ -5,7 +5,7 @@ import {computed} from '@ember/object'
 
 // ----- Own modules -----
 import DragSortList from './drag-sort-list'
-import layout from '../templates/components/drag-sort-occlusion-list'
+import layout from '../templates/components/drag-sort-occluded'
 import defaultOcclusionOptions from '../constants/occlusion-options'
 
 export default DragSortList.extend(defaultOcclusionOptions, {

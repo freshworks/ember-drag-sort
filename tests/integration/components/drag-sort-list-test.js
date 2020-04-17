@@ -226,7 +226,7 @@ module('Integration | Component | drag-sort-list', function (hooks) {
     })
 
     await render(hbs`
-      {{#drag-sort-occlusion-list
+      {{#drag-sort-occluded
         lazyRenderEnabled  = lazyRenderEnabled
         class              = "height--400"
         items              = items
@@ -236,7 +236,7 @@ module('Integration | Component | drag-sort-list', function (hooks) {
         <div>
           {{item.name}}
         </div>
-      {{/drag-sort-occlusion-list}}
+      {{/drag-sort-occluded}}
     `)
 
     const itemList = find('.dragSortList')
@@ -268,7 +268,7 @@ module('Integration | Component | drag-sort-list', function (hooks) {
     })
 
     await render(hbs`
-      {{#drag-sort-occlusion-list
+      {{#drag-sort-occluded
         itemsThreshold     = itemsThreshold
         class              = "height--400"
         items              = items
@@ -278,7 +278,7 @@ module('Integration | Component | drag-sort-list', function (hooks) {
         <div>
           {{item.name}}
         </div>
-      {{/drag-sort-occlusion-list}}
+      {{/drag-sort-occluded}}
     `)
 
     // occlusion threshold not exceeded - renderer inactive

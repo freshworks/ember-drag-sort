@@ -488,7 +488,7 @@
 
       <article class="list">
         <h4>List with Occlusion Rendering </h4>
-        {{#drag-sort-occlusion-list
+        {{#drag-sort-occluded
           id                = "occlusion-2"
           items             = occlusion2
           dragEndAction     = (action 'dragEnd')
@@ -498,7 +498,7 @@
           <div class="the-item">
             {{item.name}}
           </div>
-        {{/drag-sort-occlusion-list}}
+        {{/drag-sort-occluded}}
       </article>
 
       <article class="list occlusion">
@@ -519,7 +519,7 @@
 
         <p class="info">Occlusion will be activated when number of items exceed the above threshold value</p>
 
-        {{#drag-sort-occlusion-list
+        {{#drag-sort-occluded
           id                      = "occlusion-3"
           items                   = occulsion3
           dragEndAction           = (action 'dragEnd')
@@ -532,7 +532,7 @@
           <div class="the-item">
             {{item.name}}
           </div>
-        {{/drag-sort-occlusion-list}}
+        {{/drag-sort-occluded}}
       </article>
     </section>
   </div>
