@@ -170,28 +170,40 @@ export default Controller.extend({
 
   nestedItems2 : computed(() => (
     {
-      name     : 'Foo',
-      children : A([
+      name           : 'Foo',
+      class          : 'height--600',
+      estimateHeight : 600,
+      children       : A([
         {
-          name     : 'Bar',
-          children : A([
+          name           : 'Bar',
+          class          : 'height--200',
+          estimateHeight : 200,
+          children       : A([
             {
-              name     : 'Baz',
-              children : A([]),
+              name           : 'Baz',
+              children       : A([]),
+              class          : 'height--100',
+              estimateHeight : 100,
             },
             {
-              name     : 'Quuz',
-              children : A([]),
+              name           : 'Quuz',
+              children       : A([]),
+              class          : 'height--100',
+              estimateHeight : 100,
             },
           ]),
         },
         {
-          name     : 'Zomg',
-          children : A([]),
+          name           : 'Zomg',
+          class          : 'height--200',
+          estimateHeight : 200,
+          children       : A([]),
         },
         {
-          name     : 'Lol',
-          children : A([]),
+          name           : 'Lol',
+          class          : 'height--200',
+          estimateHeight : 200,
+          children       : A([]),
         },
       ]),
     }
