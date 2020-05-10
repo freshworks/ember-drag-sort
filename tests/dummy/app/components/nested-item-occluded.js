@@ -9,4 +9,5 @@ export default Component.extend({
   item          : undefined,
   dragEndAction : undefined,
   group         : 'nested group',
+  shouldRecycle : false,
 })
