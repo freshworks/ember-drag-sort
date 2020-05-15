@@ -537,3 +537,20 @@
     </section>
   </div>
 </div>
+
+
+<div class="list-groups">
+  <div class="list-group-wrapper">
+    <h2>Nested list occlusionn</h2>
+
+    {{nested-item-occluded
+      id            = "nested2"
+      item          = nestedItems2
+      group         = "nested2"
+      dragEndAction = (action "dragEnd")
+      shouldRecycle = false
+    }}
+
+    <p>Warning: Nested lists doesn't work well with horizontal lists.</p>
+  </div>
+</div>

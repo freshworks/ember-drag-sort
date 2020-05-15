@@ -46,9 +46,9 @@ export default {
    *
    * @property bufferSize
    * @type Number
-   * @default 2
+   * @default 5
    */
-  bufferSize : 2,
+  bufferSize : 5,
 
   // –––––––––––––– Initial Scroll State
   /**
