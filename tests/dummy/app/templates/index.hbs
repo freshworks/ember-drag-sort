@@ -456,3 +456,101 @@
     <p>Warning: Nested lists doesn't work well with horizontal lists.</p>
   </div>
 </div>
+
+<div class="list-groups">
+  <div class="list-group-wrapper">
+    <h2>Occlusion Rendering</h2>
+
+    <p>
+      Sort lists, drag between lists. Won't let you drag items from/to other groups.
+      <br>
+      <i class="info">Highlight in <b>BLUE</b> border indicates occlusion render is enabled</i>
+    </p>
+
+    <section class="list-group">
+      <article class="list">
+        <h4>List without occlusion render</h4>
+
+        {{#drag-sort-list
+          id            = "occlusion-1"
+          items         = occlusion1
+          handle        = '.handle'
+          class         = "height--400"
+          dragEndAction = (action 'dragEnd')
+          as |item|
+        }}
+          <div class="the-item">
+            <span class="handle" draggable="true">☰</span>
+            {{item.name}}
+          </div>
+        {{/drag-sort-list}}
+      </article>
+
+      <article class="list">
+        <h4>List with Occlusion Rendering </h4>
+        {{#drag-sort-occluded
+          id                = "occlusion-2"
+          items             = occlusion2
+          dragEndAction     = (action 'dragEnd')
+          class             = "height--400"
+          as |item|
+        }}
+          <div class="the-item">
+            {{item.name}}
+          </div>
+        {{/drag-sort-occluded}}
+      </article>
+
+      <article class="list occlusion">
+        <h4>List with Occlusion Rendering (Threshold)</h4>
+
+        <div class="action">
+          <div class="pull-left">
+            <label for="threshold">
+              Adjust Threshold:
+            </label>
+            {{input name="threshold" type="number" value=(mut itemsThreshold) class="input padding--8"}}
+          </div>
+          <div class="pull-right">
+            <button name="button" class="padding--8" {{action 'appendItems'}}>Add 3 Items</button>
+            <button name="button" class="padding--8" {{action 'removeItems'}}>Remove 3 Items</button>
+          </div>
+        </div>
+
+        <p class="info">Occlusion will be activated when number of items exceed the above threshold value</p>
+
+        {{#drag-sort-occluded
+          id                      = "occlusion-3"
+          items                   = occulsion3
+          dragEndAction           = (action 'dragEnd')
+          itemsThreshold          = itemsThreshold
+          registerApi             = (action 'registerApi')
+          estimateHeight          = 35
+          class                   = "height--400"
+          as |item|
+        }}
+          <div class="the-item">
+            {{item.name}}
+          </div>
+        {{/drag-sort-occluded}}
+      </article>
+    </section>
+  </div>
+</div>
+
+
+<div class="list-groups">
+  <div class="list-group-wrapper">
+    <h2>Nested list occlusionn</h2>
+
+    {{nested-item-occluded
+      id            = "nested2"
+      item          = nestedItems2
+      group         = "nested2"
+      dragEndAction = (action "dragEnd")
+      shouldRecycle = false
+    }}
+
+    <p>Warning: Nested lists doesn't work well with horizontal lists.</p>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<p class = "nestedItem-title">
+  {{item.name}}
+</p>
+
+{{#drag-sort-occluded
+  items               = item.children
+  group               = group
+  dragEndAction       = dragEndAction
+  estimateHeight      = item.estimateHeight
+  class               = item.class
+  shouldRecycle       = shouldRecycle
+  as |child|
+}}
+  {{nested-item-occluded
+    item          = child
+    group         = group
+    dragEndAction = dragEndAction
+  }}
+{{/drag-sort-occluded}}

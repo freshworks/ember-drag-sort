@@ -4,10 +4,26 @@ import {A} from '@ember/array'
 import { task, timeout } from 'ember-concurrency'
 import RSVP from 'rsvp'
 import { computed } from '@ember/object'
+import { run } from '@ember/runloop'
 
+const repeatedArray = (n) => {
+  let res = A([])
 
+  while (n > 0) {
+    res.pushObjects(A([
+      {name : 'Foo'},
+      {name : 'Bar'},
+      {name : 'Baz'},
+    ]))
+    n--
+  }
+
+  return res
+}
 
 export default Controller.extend({
+  dragSortApi    : undefined,
+  itemsThreshold : 10,
 
   simple1 : computed(() =>
     A([
@@ -154,28 +170,40 @@ export default Controller.extend({
 
   nestedItems2 : computed(() => (
     {
-      name     : 'Foo',
-      children : A([
+      name           : 'Foo',
+      class          : 'height--600',
+      estimateHeight : 600,
+      children       : A([
         {
-          name     : 'Bar',
-          children : A([
+          name           : 'Bar',
+          class          : 'height--200',
+          estimateHeight : 200,
+          children       : A([
             {
-              name     : 'Baz',
-              children : A([]),
+              name           : 'Baz',
+              children       : A([]),
+              class          : 'height--100',
+              estimateHeight : 100,
             },
             {
-              name     : 'Quuz',
-              children : A([]),
+              name           : 'Quuz',
+              children       : A([]),
+              class          : 'height--100',
+              estimateHeight : 100,
             },
           ]),
         },
         {
-          name     : 'Zomg',
-          children : A([]),
+          name           : 'Zomg',
+          class          : 'height--200',
+          estimateHeight : 200,
+          children       : A([]),
         },
         {
-          name     : 'Lol',
-          children : A([]),
+          name           : 'Lol',
+          class          : 'height--200',
+          estimateHeight : 200,
+          children       : A([]),
         },
       ]),
     }
@@ -195,9 +223,37 @@ export default Controller.extend({
     ])
   ),
 
+  occlusion1 : computed(() => repeatedArray(20)),
+  occlusion2 : computed(() => repeatedArray(20)),
+  occulsion3 : computed(() => repeatedArray(1)),
+
   networkFailure : false,
 
   actions : {
+    registerApi (api) {
+      this.set('dragSortApi', api)
+    },
+
+    appendItems () {
+      const { occulsion3, dragSortApi } = this.getProperties('occulsion3', 'dragSortApi')
+      occulsion3.pushObjects(repeatedArray(1))
+
+      // Scroll after the addition of items is rendered
+      run.next(() => {
+        dragSortApi.scrollToBottom()
+      })
+    },
+
+    removeItems () {
+      const { occulsion3, dragSortApi } = this.getProperties('occulsion3', 'dragSortApi')
+      occulsion3.removeAt(0, 3)
+
+      // Scroll after the addition of items is rendered
+      run.next(() => {
+        dragSortApi.scrollToBottom()
+      })
+    },
+
     dragEnd ({sourceList, sourceIndex, targetList, targetIndex}) {
       if (sourceList === targetList && sourceIndex === targetIndex) return
 

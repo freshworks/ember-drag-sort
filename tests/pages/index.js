@@ -23,4 +23,7 @@ export default create({
   copies2     : list('#copies-2'),
   sourceOnly1 : list('#source-only-1'),
   sourceOnly2 : list('#source-only-2'),
+  occlusion1  : list('#occlusion-1'),
+  occlusion2  : list('#occlusion-2'),
+  occlusion3  : list('#occlusion-3'),
 })
